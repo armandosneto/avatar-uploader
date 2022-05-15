@@ -1,4 +1,5 @@
 .avatar-uploader {
+  position: relative;
   background-color: #f2f5f8;
   color: #677489;
   width: 600px;
@@ -8,6 +9,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #f2f5f8;
+    object-fit: cover;
+  }
 
   & > div {
     width: 100%;
@@ -26,6 +36,46 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      color: #677489;
+      position: absolute;
+      margin-bottom: 64px;
+      right: 50%;
+    }
+
+    .save-button {
+      background-color: #3d485f;
+      border: unset;
+      width: 120px;
+      height: 36px;
+      border-radius: 120px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      position: absolute;
+      top: 120px;
+      right: 36px;
+    }
+  }
+}
+
+.croppie-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .cr-boundary {
+    border-radius: 50%;
+    .cr-viewport {
+      border: unset;
+    }
+  }
+  .cr-slider-wrap {
+    width: fit-content !important;
+    .cr-slider {
     }
   }
 }
