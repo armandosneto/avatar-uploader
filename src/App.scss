@@ -1,7 +1,22 @@
-.app{
+.app {
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+
+  .image-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
+  }
 }
