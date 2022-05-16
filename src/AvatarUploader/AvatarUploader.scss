@@ -11,12 +11,32 @@
   justify-content: center;
   cursor: pointer;
 
-  .avatar {
-    width: 120px;
-    height: 120px;
+  .logo-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    width: 150px;
+    min-width: 150px;
+    min-height: 150px;
     border-radius: 50%;
-    background-color: #f2f5f8;
-    object-fit: cover;
+    overflow: hidden;
+
+    margin: 0 35px;
+
+    &.error {
+      background-color: #c3cbd5;
+    }
+
+    .error-img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo {
+      width: 150px;
+      height: 150px;
+    }
   }
 
   & > div {
@@ -59,6 +79,46 @@
       top: 120px;
       right: 36px;
     }
+
+    .cancel-button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background-color: transparent;
+      border: none;
+    }
+  }
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin-right: 150px;
+
+    .error-body {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+      flex: 1;
+      color: #c64d31;
+      font-size: 18px;
+
+      .error-button {
+        margin-top: 16px;
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        color: inherit;
+        text-decoration: underline;
+        color: #3d485f;
+        font-size: 18px;
+      }
+    }
   }
 }
 
@@ -75,7 +135,5 @@
   }
   .cr-slider-wrap {
     width: fit-content !important;
-    .cr-slider {
-    }
   }
 }

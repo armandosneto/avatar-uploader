@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "./AvatarUploader.scss";
 import "croppie/croppie.css";
 import { useDropzone } from "react-dropzone";
@@ -6,12 +6,15 @@ import { useState } from "react";
 import Croppie from "croppie";
 
 interface Props {
-  // onDrop: (files: File[]) => void;
+  onSave: (image: string) => void;
 }
-const AvatarUploader: React.FC<Props> = () => {
-  const [image, setImage] = useState<File>();
+
+const AvatarUploader: React.FC<Props> = ({ onSave }) => {
+  const [image, setImage] = useState<string | undefined>();
+  const [saved, setSaved] = useState(false);
   const [croppie, setCroppie] = useState<Croppie | null>(null);
   const [divRef, setDivRef] = useState<HTMLDivElement | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (divRef && image && !croppie) {
@@ -28,7 +31,7 @@ const AvatarUploader: React.FC<Props> = () => {
         },
       });
       croppieInstance.bind({
-        url: URL.createObjectURL(image),
+        url: image,
       });
       setCroppie(croppieInstance);
     }
@@ -39,59 +42,92 @@ const AvatarUploader: React.FC<Props> = () => {
     accept: { "image/*": [] },
     multiple: false,
     onDrop: (acceptedFiles) => {
-      setImage(acceptedFiles[0]);
-      if (croppie) {
-        croppie.bind({
-          url: URL.createObjectURL(acceptedFiles[0]),
-        });
-      }
+      setSaved(false);
+      setCroppie(null);
+      setImage(URL.createObjectURL(acceptedFiles[0]));
     },
     onError: (error) => {
-      console.log(error);
+      setHasError(true);
     },
   });
 
-  function handleSubmit(event: any) {
-    event.preventDefault();
-    if (croppie !== null) {
-      croppie
-        .result({
-          type: "base64",
-          size: {
-            width: 480,
-            height: 480,
-          },
-        })
-        .then((blob) => {
-          console.log(blob);
-        });
-    }
-  }
+  const handleSubmit = useCallback(
+    (event: any) => {
+      event.preventDefault();
+      if (croppie) {
+        croppie
+          .result({
+            type: "base64",
+            size: {
+              width: 480,
+              height: 480,
+            },
+          })
+          .then((blob) => {
+            onSave(blob);
+            setImage(blob);
+            setSaved(true);
+          });
+      }
+    },
+    [croppie, onSave]
+  );
+
+  const handleCancel = useCallback(() => {
+    setImage(undefined);
+    setHasError(false);
+    setCroppie(null);
+  }, [setImage, setHasError, setCroppie]);
 
   return (
     <>
-      <div {...getRootProps({ className: "avatar-uploader" })}>
-        {image ? (
+      {hasError ? (
+        <div className="avatar-uploader">
+          <div className="error-content">
+            <div className="logo-image error">
+              <img className="error-image" src="alert-circle.svg" alt="error" />
+            </div>
+            <div className="error-body">
+              Sorry, The Upload failed.
+              <button className="error-button" onClick={() => handleCancel()}>
+                Please try again.
+              </button>
+              <button onClick={handleCancel} className="cancel-button">
+                <img src="close.svg" alt="close" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : image && !saved ? (
+        <div className="avatar-uploader">
           <div>
             <p className="title">Crop</p>
             <div ref={setDivRef} />
             <button onClick={handleSubmit} className="save-button">
               Save
             </button>
+            <button onClick={handleCancel} className="cancel-button">
+              <img src="close.svg" alt="close" />
+            </button>
           </div>
-        ) : (
-          <>
-            <input {...getInputProps()} />
-            <div>
-              <div className="avatar-uploader-title">
-                <img src="image.svg" alt="img-logo" />
-                <p>Organzation Logo </p>
-              </div>
-              <p>Drop the image here or click to browse.</p>
+        </div>
+      ) : (
+        <div {...getRootProps({ className: "avatar-uploader" })}>
+          <input {...getInputProps()} />
+          {image && (
+            <div className="logo-image">
+              <img className="logo" src={image} alt="logo" />
             </div>
-          </>
-        )}
-      </div>
+          )}
+          <div>
+            <div className="avatar-uploader-title">
+              <img src="image.svg" alt="img-logo" />
+              <p>Organzation Logo </p>
+            </div>
+            <p>Drop the image here or click to browse.</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };
