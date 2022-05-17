@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./AvatarUploader.scss";
 import "croppie/croppie.css";
 import { useDropzone } from "react-dropzone";
-import { useState } from "react";
 import Croppie from "croppie";
 
 interface Props {
@@ -38,13 +37,20 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [divRef, image]);
 
+  const handleDrop = useCallback(
+    (files: File[]) => {
+      setSaved(false);
+      setCroppie(null);
+      setImage(URL.createObjectURL(files[0]));
+    },
+    [setSaved, setCroppie, setImage]
+  );
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "image/*": [] },
     multiple: false,
     onDrop: (acceptedFiles) => {
-      setSaved(false);
-      setCroppie(null);
-      setImage(URL.createObjectURL(acceptedFiles[0]));
+      handleDrop(acceptedFiles);
     },
     onError: (error) => {
       setHasError(true);
@@ -83,7 +89,7 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
     <>
       {hasError ? (
         <div className="avatar-uploader">
-          <div className="error-content">
+          <div className="error-content" data-testid="error-content">
             <div className="logo-image error">
               <img className="error-image" src="alert-circle.svg" alt="error" />
             </div>
@@ -99,21 +105,32 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
           </div>
         </div>
       ) : image && !saved ? (
-        <div className="avatar-uploader">
+        <div className="avatar-uploader" data-testid="avatar-image-cropper">
           <div>
             <p className="title">Crop</p>
             <div ref={setDivRef} />
-            <button onClick={handleSubmit} className="save-button">
+            <button
+              onClick={handleSubmit}
+              className="save-button"
+              data-testid="save-button"
+            >
               Save
             </button>
-            <button onClick={handleCancel} className="cancel-button">
+            <button
+              onClick={handleCancel}
+              className="cancel-button"
+              data-testid="cancel-button"
+            >
               <img src="close.svg" alt="close" />
             </button>
           </div>
         </div>
       ) : (
-        <div {...getRootProps({ className: "avatar-uploader" })}>
-          <input {...getInputProps()} />
+        <div
+          {...getRootProps({ className: "avatar-uploader" })}
+          data-testid="avatar-uploader"
+        >
+          <input {...getInputProps()} data-testid="avatar-uploader-input" />
           {image && (
             <div className="logo-image">
               <img className="logo" src={image} alt="logo" />
