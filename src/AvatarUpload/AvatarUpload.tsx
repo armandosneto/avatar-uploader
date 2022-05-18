@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "./AvatarUploader.scss";
+import "./AvatarUpload.scss";
 import "croppie/croppie.css";
 import { useDropzone } from "react-dropzone";
 import Croppie from "croppie";
@@ -8,7 +8,7 @@ interface Props {
   onSave: (image: string) => void;
 }
 
-const AvatarUploader: React.FC<Props> = ({ onSave }) => {
+const AvatarUpload: React.FC<Props> = ({ onSave }) => {
   const [image, setImage] = useState<string | undefined>();
   const [saved, setSaved] = useState(false);
   const [croppie, setCroppie] = useState<Croppie | null>(null);
@@ -88,7 +88,7 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
   return (
     <>
       {hasError ? (
-        <div className="avatar-uploader">
+        <div className="avatar-upload">
           <div className="error-content" data-testid="error-content">
             <div className="logo-image error">
               <img className="error-image" src="alert-circle.svg" alt="error" />
@@ -105,7 +105,7 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
           </div>
         </div>
       ) : image && !saved ? (
-        <div className="avatar-uploader" data-testid="avatar-image-cropper">
+        <div className="avatar-upload" data-testid="avatar-image-cropper">
           <div>
             <p className="title">Crop</p>
             <div ref={setDivRef} />
@@ -127,17 +127,17 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
         </div>
       ) : (
         <div
-          {...getRootProps({ className: "avatar-uploader" })}
-          data-testid="avatar-uploader"
+          {...getRootProps({ className: "avatar-upload" })}
+          data-testid="avatar-upload"
         >
-          <input {...getInputProps()} data-testid="avatar-uploader-input" />
+          <input {...getInputProps()} data-testid="avatar-upload-input" />
           {image && (
             <div className="logo-image">
               <img className="logo" src={image} alt="logo" />
             </div>
           )}
           <div>
-            <div className="avatar-uploader-title">
+            <div className="avatar-upload-title">
               <img src="image.svg" alt="img-logo" />
               <p>Organzation Logo </p>
             </div>
@@ -149,4 +149,4 @@ const AvatarUploader: React.FC<Props> = ({ onSave }) => {
   );
 };
 
-export default AvatarUploader;
+export default AvatarUpload;

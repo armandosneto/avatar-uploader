@@ -1,5 +1,5 @@
 import React from "react";
-import AvatarUploader from "./AvatarUploader";
+import AvatarUpload from "./AvatarUpload";
 import "./App.scss";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
 
   return (
     <div className="app">
-      <AvatarUploader onSave={setImage} />
+      <AvatarUpload onSave={setImage} />
       <div className="image-preview">
         Image in parent:
         {image && <img src={image} alt="preview" />}
